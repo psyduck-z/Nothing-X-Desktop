@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Nothing X
+GenericName=Earbuds
+Comment=Control Nothing earbuds from the tray
+Exec=nothingx
+Icon=nothingx
+Terminal=false
+Categories=AudioVideo;Audio;Settings;HardwareSettings;
+Keywords=nothing;ear;earbuds;headphones;anc;bluetooth;
+StartupWMClass=nothingx

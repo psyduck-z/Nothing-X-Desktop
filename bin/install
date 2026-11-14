@@ -1,0 +1,8 @@
+#!/bin/sh
+# Builds the Arch package from this checkout and installs it, so Nothing X
+# shows up in the Omarchy app launcher (Super + Space).
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+cd "$ROOT/packaging/arch"
+exec makepkg -fsi "$@"

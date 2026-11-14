@@ -1,0 +1,44 @@
+# Builds the same sources for Omarchy (Arch) and Windows on every push, so
+# the two versions can't drift apart.
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install Qt
+        run: |
+          pacman -Syu --noconfirm --needed base-devel git qt6-base qt6-declarative qt6-svg \
+            qt6-connectivity qt6-wayland layer-shell-qt bluez-libs
+      - uses: actions/checkout@v4
+      - name: Test
+        run: bin/test
+      - name: Build
+        run: bin/build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nothingx-linux
+          path: build/nothingx
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          arch: win64_msvc2022_64
+          modules: qtconnectivity
+      - name: Build
+        shell: pwsh
+        run: .\packaging\windows\build.ps1 -QtDir "$env:QT_ROOT_DIR"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nothingx-windows
+          path: dist/windows

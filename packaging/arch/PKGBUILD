@@ -1,0 +1,27 @@
+# Builds Nothing X from the checkout this PKGBUILD lives in (bin/install).
+pkgname=nothingx
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Nothing X for the desktop: control Nothing earbuds from the tray"
+arch=('x86_64' 'aarch64')
+url="https://github.com/psyduck-z/Nothing-X-Desktop"
+license=('Apache-2.0')
+depends=('qt6-base' 'qt6-declarative' 'qt6-svg' 'qt6-connectivity' 'qt6-wayland' 'layer-shell-qt' 'bluez')
+makedepends=('make' 'gcc')
+options=('!debug')
+
+_root="$(realpath "$startdir/../..")"
+
+build() {
+  mkdir -p "$srcdir/build"
+  cd "$srcdir/build"
+  qmake6 "$_root/nothingx.pro"
+  make -j"$(nproc)"
+}
+
+package() {
+  install -Dm755 "$srcdir/build/nothingx" "$pkgdir/usr/bin/nothingx"
+  install -Dm644 "$_root/packaging/nothingx.desktop" "$pkgdir/usr/share/applications/nothingx.desktop"
+  install -Dm644 "$_root/packaging/nothingx.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/nothingx.svg"
+  install -Dm644 "$_root/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

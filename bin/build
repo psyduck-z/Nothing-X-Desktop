@@ -1,0 +1,12 @@
+#!/bin/sh
+# Builds build/nothingx with qmake6 + make.
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+mkdir -p "$ROOT/build"
+cd "$ROOT/build"
+
+qmake6 "$ROOT/nothingx.pro"
+make -j"$(nproc)"
+
+echo "Built $ROOT/build/nothingx"
