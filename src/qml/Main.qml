@@ -32,7 +32,7 @@ Window {
 
     // What pages use to talk to the window.
     QtObject {
-        id: ui
+        id: bridge
         function open(name, props) { window.open(name, props) }
         function back() { if (stack.depth > 1) stack.pop() }
         function confirm(message, action, title) { sheet.ask(message, action, title) }
@@ -86,7 +86,7 @@ Window {
 
     Component {
         id: home
-        HomePage { ui: ui }
+        HomePage { ui: bridge }
     }
 
     function closeAll() { stack.pop(null) }
@@ -94,7 +94,7 @@ Window {
     function open(name, props) {
         if (name === "home")
             return
-        const p = Object.assign({ ui: ui }, props || {})
+        const p = Object.assign({ ui: bridge }, props || {})
         if (name === "eqAdvanced")
             p.startAdvanced = true
         if (name === "gesture" && p.part === undefined)

@@ -146,9 +146,13 @@ bool App::start() {
     }
 
     // Reconnect to the last earbuds whenever they connect to the computer.
+    // The first time, with nothing chosen yet, take the only paired Nothing
+    // earbuds as soon as they connect.
     connect(m_scanner.get(), &DeviceScanner::deviceConnected, this, [this](const QString &address, const QString &name) {
-        if (m_settings->autoConnect() && m_device->state() == Device::Disconnected &&
-            address == m_settings->lastDeviceAddress())
+        if (!m_settings->autoConnect() || m_device->state() != Device::Disconnected)
+            return;
+        const QString last = m_settings->lastDeviceAddress();
+        if (address == last || (last.isEmpty() && m_scanner->devices().size() == 1))
             m_device->connectToDevice(address, name);
     });
 
@@ -162,10 +166,18 @@ bool App::start() {
         auto *watch = new QTimer(this);
         watch->setInterval(5000);
         auto tryConnect = [this] {
+            if (!m_settings->autoConnect() || m_device->state() != Device::Disconnected)
+                return;
             const QString last = m_settings->lastDeviceAddress();
-            if (m_settings->autoConnect() && !last.isEmpty() && m_device->state() == Device::Disconnected &&
-                m_scanner->isConnected(last))
-                m_device->connectToLast();
+            if (!last.isEmpty()) {
+                if (m_scanner->isConnected(last))
+                    m_device->connectToLast();
+                return;
+            }
+            const QVariantList found = m_scanner->devices();
+            if (found.size() == 1 && found.first().toMap().value("connected").toBool())
+                m_device->connectToDevice(found.first().toMap().value("address").toString(),
+                                          found.first().toMap().value("name").toString());
         };
         connect(watch, &QTimer::timeout, this, tryConnect);
         watch->start();

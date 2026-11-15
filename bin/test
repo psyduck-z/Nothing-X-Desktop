@@ -1,11 +1,17 @@
 #!/bin/sh
-# Builds and runs the protocol and backend tests offscreen.
+# Builds and runs the tests offscreen: protocol and backend, then a
+# click-through of the real popup on the simulated earbuds.
 set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
-mkdir -p "$ROOT/build/tests"
-cd "$ROOT/build/tests"
+mkdir -p "$ROOT/build/tests" "$ROOT/build/ui-tests"
 
+cd "$ROOT/build/tests"
 qmake6 "$ROOT/tests/nothingx_tests.pro"
 make -j"$(nproc)"
 QT_QPA_PLATFORM=offscreen ./nothingx_tests "$@"
+
+cd "$ROOT/build/ui-tests"
+qmake6 "$ROOT/tests/ui/ui_tests.pro"
+make -j"$(nproc)"
+QT_QPA_PLATFORM=offscreen ./ui_tests
