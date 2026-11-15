@@ -48,6 +48,10 @@ public:
     // The official feature configuration of a model ("B173" for the Ear (3)),
     // straight from the app's ear_white_list.json; empty when unknown.
     QJsonObject modelConfig(const QString &modelId) const;
+    // The product a reported model id belongs to: the earbuds can report an id
+    // (the Ear (3) says "B201") that the official list files under another
+    // product as its "supportId" (B173). Unknown ids come back unchanged.
+    QString productId(const QString &reportedId) const;
     // The model's entries in devices_info_list.json, one per colour.
     QJsonArray modelSkus(const QString &modelId) const;
     // A product photo of the model in a colour ("01", "02", ...), kind being

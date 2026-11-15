@@ -154,7 +154,7 @@ private:
     void pump();
     void onBytes(const QByteArray &bytes);
     void handle(const Proto::Frame &frame);
-    void applyModel(const QString &id);
+    void applyModel(const QString &reportedId);
     void readAll();
     void sendCustomEq();
     void sendAdvancedEq();

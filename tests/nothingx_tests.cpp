@@ -405,7 +405,11 @@ private slots:
             f.open(QIODevice::WriteOnly);
             f.write(data);
         };
-        put(apk + "/assets/flutter_assets/assets/config/ear_white_list.json", R"([{"id":"B173","configs":[{"ancLevel":63}]}])");
+        put(apk + "/assets/flutter_assets/assets/config/ear_white_list.json",
+            R"([{"id":"B173","supportId":"B201","configs":[{"ancLevel":63}]},{"id":"B201","configs":[{"ancLevel":63}]}])");
+        put(apk + "/assets/flutter_assets/assets/config/devices_info_list.json",
+            "{\"deviceSkuResps\":[{\"colorId\":\"01\",\"deviceSpu\":{\"modelId\":\"B173\",\"name\":\"Ear (3)\"},"
+            "\"globalImageUrl\":\"https://example.invalid/x.png\"}]}");
         put(apk + "/assets/flutter_assets/assets/images/ear/card_anc_on.svg", "<svg/>");
         put(apk + "/assets/flutter_assets/assets/images/watch/skip.svg", "<svg/>");
         put(dir.filePath("manifest.json"), R"({"package_name":"com.nothing.smartcenter","version_name":"3.11.0"})");
@@ -426,6 +430,10 @@ private slots:
         QVERIFY(!pack.hasAsset("assets/images/watch/skip.svg"));
         QVERIFY(!pack.hasAsset("../../etc/passwd"));
         QCOMPARE(pack.modelConfig("b173").value("configs").toArray().first().toObject().value("ancLevel").toInt(), 63);
+        // A real Ear (3) reports B201, which the official list files under B173.
+        QCOMPARE(pack.productId("B201"), QString("B173"));
+        QCOMPARE(pack.productId("B173"), QString("B173"));
+        QCOMPARE(pack.productId("XXXX"), QString("XXXX"));
         // A file that isn't the official app is refused.
         put(dir.filePath("other.apk"), "not a zip");
         QVERIFY(!OfficialPack::unpack(dir.filePath("other.apk"), cache, &version, &error));

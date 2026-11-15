@@ -163,6 +163,15 @@ QJsonObject OfficialPack::modelConfig(const QString &modelId) const {
     return {};
 }
 
+QString OfficialPack::productId(const QString &reportedId) const {
+    if (reportedId.isEmpty() || !modelSkus(reportedId).isEmpty())
+        return reportedId;
+    for (const QJsonValue &v : m_whiteList)
+        if (v.toObject().value("supportId").toString().compare(reportedId, Qt::CaseInsensitive) == 0)
+            return v.toObject().value("id").toString();
+    return reportedId;
+}
+
 QJsonArray OfficialPack::modelSkus(const QString &modelId) const {
     QJsonArray out;
     for (const QJsonValue &v : m_skus)

@@ -153,7 +153,11 @@ void Device::disconnectFromDevice() {
     setState(Disconnected);
 }
 
-void Device::applyModel(const QString &id) {
+void Device::applyModel(const QString &reportedId) {
+    // The Ear (3) reports B201, the id the official list files it under is B173.
+    QString id = m_pack ? m_pack->productId(reportedId) : reportedId;
+    if (id == QLatin1String("B201"))
+        id = QStringLiteral("B173");
     ModelConfig model;
     if (m_pack && !id.isEmpty()) {
         const QJsonObject entry = m_pack->modelConfig(id);

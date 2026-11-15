@@ -28,6 +28,8 @@ static void collect(QQuickItem *item, const QString &text, QList<QQuickItem *> &
         collect(c, text, out);
 }
 static bool click(const QString &text, int index = 0) {
+    // Let page transitions and layout settle before aiming.
+    QTest::qWait(350);
     QList<QQuickItem *> found;
     collect(win()->contentItem(), text, found);
     if (found.size() <= index) { printf("  !! no visible '%s'\n", qPrintable(text)); return false; }

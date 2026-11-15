@@ -10,7 +10,8 @@ DemoTransport::DemoTransport(QObject *parent) : Transport(parent) {
     m_state[Cmd::CaseFirmwareRead] = QByteArray::fromHex("010000120000000a");
     m_state[Cmd::InfoRead] = QByteArray(1, 5) +
                              "2,1,1.0\n2,2,1.0.1.62\n3,2,1.0.1.62\n4,2,1.0.0.18\n2,4,SH10DEM0000173\n";
-    m_state[Cmd::ModelRead] = QByteArray::fromHex("73b1");
+    // What a real Ear (3) reports (its B201 id, listed under B173).
+    m_state[Cmd::ModelRead] = QByteArray::fromHex("01b2");
     m_state[Cmd::ColorRead] = QByteArray(1, 1);
     // Both buds in the ears and connected; the case is open.
     m_state[Cmd::StatusRead] = QByteArray::fromHex("03028403840401");
