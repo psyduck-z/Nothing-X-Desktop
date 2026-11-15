@@ -117,8 +117,8 @@ Item {
                         anchors.centerIn: parent
                         visible: parent.status !== Image.Ready
                         text: root.connected ? device.displayName : "NOTHING X"
-                        size: 34
-                        color: theme.textDim
+                        size: 38
+                        color: theme.textMuted
                     }
                 }
                 BatteryView {
@@ -158,10 +158,12 @@ Item {
                             primary: true
                             onClicked: device.connectToLast()
                         }
+                        // With one pair of Nothing earbuds paired, one click is enough.
                         Pill {
-                            text: settings.lastDeviceAddress !== "" ? qsTr("Other devices") : qsTr("Choose earbuds")
+                            readonly property var only: settings.lastDeviceAddress === "" && scanner.devices.length === 1 ? scanner.devices[0] : null
+                            text: only ? qsTr("Use %1").arg(only.name) : settings.lastDeviceAddress !== "" ? qsTr("Other devices") : qsTr("Choose earbuds")
                             primary: settings.lastDeviceAddress === ""
-                            onClicked: root.ui.open("devices")
+                            onClicked: only ? device.connectToDevice(only.address, only.name) : root.ui.open("devices")
                         }
                     }
                 }
