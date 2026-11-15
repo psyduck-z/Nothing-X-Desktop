@@ -390,6 +390,16 @@ private slots:
         QTRY_VERIFY(!r.device.pairedDevices().at(1).toMap().value("connected").toBool());
     }
 
+    void gestureEventReachesTheDesktop() {
+        Rig r;
+        QTRY_VERIFY(r.ready());
+        QSignalSpy events(&r.device, &Device::gestureEvent);
+        // Exactly what a real Ear (3) sent for a gesture set to action 31.
+        r.transport->push(0xE014, hex("1f"));
+        QTRY_COMPARE(events.size(), 1);
+        QCOMPARE(events.first().first().toInt(), 31);
+    }
+
     // --- Official app import, updates, tray -------------------------------------------
     void importsAnOfficialApp() {
         const QString tar = QStandardPaths::findExecutable("bsdtar");

@@ -25,12 +25,12 @@ ScrollPage {
         Repeater {
             // Phone-only actions (News, Essential Space) need a Nothing phone;
             // they are listed only while one of them is set.
-            model: root.entry.options.filter((o) => !o.phoneOnly || o.action === root.current)
+            model: root.entry.options.filter((o) => !o.phoneOnly || o.action === 31 || o.action === root.current)
             delegate: Column {
                 required property var modelData
                 required property int index
                 width: parent.width
-                readonly property var all: root.entry.options.filter((o) => !o.phoneOnly || o.action === root.current)
+                readonly property var all: root.entry.options.filter((o) => !o.phoneOnly || o.action === 31 || o.action === root.current)
                 readonly property bool newGroup: index === 0 || all[index - 1].group !== modelData.group
                 readonly property bool isCycle: modelData.action === 10
                 readonly property bool selected: isCycle ? S.isNoiseCycle(root.current) : modelData.action === root.current
@@ -110,6 +110,16 @@ ScrollPage {
                             }
                         }
                     }
+                }
+                Txt {
+                    visible: modelData.action === 31 && parent.selected
+                    width: parent.width
+                    text: settings.assistantCommand !== ""
+                        ? qsTr("Runs %1").arg(settings.assistantCommand)
+                        : qsTr("Choose what this runs in App settings › Assistant.")
+                    size: 12
+                    color: settings.assistantCommand !== "" ? theme.textMuted : theme.accent
+                    bottomPadding: 8
                 }
                 Txt {
                     visible: modelData.tipKey !== "" && (parent.selected || !modelData.custom)

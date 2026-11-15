@@ -148,6 +148,13 @@ bool App::start() {
         m_officialWatch.start();
     }
 
+    // A gesture set to "Desktop assistant" sends an event over the control
+    // link (the action the official app uses for News Reporter).
+    connect(m_device.get(), &Device::gestureEvent, this, [this](int value) {
+        if (value == 31)
+            runAssistant();
+    });
+
     // Reconnect to the last earbuds whenever they connect to the computer.
     // The first time, with nothing chosen yet, take the only paired Nothing
     // earbuds as soon as they connect.
@@ -214,6 +221,21 @@ void App::hidePopup() { m_placer->hide(); }
 void App::quit() {
     m_device->disconnectFromDevice();
     QTimer::singleShot(0, qApp, &QApplication::quit);
+}
+
+void App::runAssistant() {
+    const QString command = m_settings->assistantCommand();
+    if (command.isEmpty()) {
+        m_tray->notify(tr("Desktop assistant"), tr("Choose what the gesture runs in Nothing X › App settings › Assistant."));
+        return;
+    }
+#ifdef Q_OS_WIN
+    const bool started = QProcess::startDetached("cmd.exe", {"/c", command});
+#else
+    const bool started = QProcess::startDetached("sh", {"-c", command});
+#endif
+    if (!started)
+        m_tray->notify(tr("Desktop assistant"), tr("Couldn't run: %1").arg(command));
 }
 
 void App::chooseOfficialApp() {

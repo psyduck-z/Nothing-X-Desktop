@@ -37,6 +37,7 @@
         <file>qml/Stepper.qml</file>
         <file>qml/Strings.js</file>
         <file>qml/SuperMicPage.qml</file>
+        <file>qml/TextBox.qml</file>
         <file>qml/Tile.qml</file>
         <file>qml/Toast.qml</file>
         <file>qml/Txt.qml</file>

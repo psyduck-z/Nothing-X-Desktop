@@ -47,6 +47,8 @@ bool Settings::autoConnect() const { return m_store.value("autoConnect", true).t
 void Settings::setAutoConnect(bool on) { setValue("autoConnect", on); }
 bool Settings::autoUpdate() const { return m_store.value("autoUpdate", true).toBool(); }
 void Settings::setAutoUpdate(bool on) { setValue("autoUpdate", on); }
+QString Settings::assistantCommand() const { return m_store.value("assistantCommand").toString(); }
+void Settings::setAssistantCommand(const QString &command) { setValue("assistantCommand", command.trimmed()); }
 QString Settings::lastDeviceAddress() const { return m_store.value("lastDeviceAddress").toString(); }
 void Settings::setLastDeviceAddress(const QString &a) { setValue("lastDeviceAddress", a); }
 QString Settings::lastDeviceName() const { return m_store.value("lastDeviceName").toString(); }

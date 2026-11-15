@@ -140,6 +140,8 @@ signals:
     // A short message for the user (a change the earbuds refused, say).
     void notice(const QString &message);
     void fitTestFinished(int left, int right);
+    // A gesture set to the earbuds' event action fired (value 31).
+    void gestureEvent(int value);
 
 private:
     using Handler = std::function<void(const Proto::Frame &)>;

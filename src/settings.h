@@ -14,6 +14,8 @@ class Settings : public QObject {
     Q_PROPERTY(bool batteryInTray READ batteryInTray WRITE setBatteryInTray NOTIFY changed)
     Q_PROPERTY(bool autoConnect READ autoConnect WRITE setAutoConnect NOTIFY changed)
     Q_PROPERTY(bool autoUpdate READ autoUpdate WRITE setAutoUpdate NOTIFY changed)
+    // Run when an earbuds gesture set to "Desktop assistant" fires.
+    Q_PROPERTY(QString assistantCommand READ assistantCommand WRITE setAssistantCommand NOTIFY changed)
     Q_PROPERTY(QString lastDeviceAddress READ lastDeviceAddress WRITE setLastDeviceAddress NOTIFY changed)
     Q_PROPERTY(QString lastDeviceName READ lastDeviceName WRITE setLastDeviceName NOTIFY changed)
 
@@ -36,6 +38,8 @@ public:
     void setAutoConnect(bool on);
     bool autoUpdate() const;
     void setAutoUpdate(bool on);
+    QString assistantCommand() const;
+    void setAssistantCommand(const QString &command);
     QString lastDeviceAddress() const;
     void setLastDeviceAddress(const QString &a);
     QString lastDeviceName() const;

@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE void openBluetoothSettings();
     // Asks for an .xapk/.apk of the official app and imports it.
     Q_INVOKABLE void chooseOfficialApp();
+    // Runs the assistant command (also what the earbuds gesture does).
+    Q_INVOKABLE void runAssistant();
 
     static QString serverName();
     // Sends `command` to a running instance; true if one answered.

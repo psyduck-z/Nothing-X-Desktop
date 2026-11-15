@@ -57,6 +57,28 @@ ScrollPage {
     }
 
     Card {
+        SectionLabel { text: qsTr("Assistant") }
+        Txt {
+            width: parent.width
+            text: qsTr("Set an earbuds gesture to \u201cDesktop assistant\u201d under Controls, and it runs this command, with no phone involved.")
+            size: 13
+            color: theme.textMuted
+        }
+        TextBox {
+            width: parent.width
+            mono: true
+            text: settings.assistantCommand
+            placeholder: app.platform === "windows" ? qsTr("e.g. wumpy --voice") : qsTr("e.g. wumpy --voice")
+            onCommitted: (value) => settings.assistantCommand = value
+        }
+        Pill {
+            text: qsTr("Try it")
+            enabled2: settings.assistantCommand !== ""
+            onClicked: app.runAssistant()
+        }
+    }
+
+    Card {
         SectionLabel { text: qsTr("Official Nothing X app") }
         Txt {
             width: parent.width

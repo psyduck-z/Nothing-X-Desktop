@@ -267,6 +267,10 @@ void Device::pump() {
 }
 
 void Device::onBytes(const QByteArray &bytes) {
+    // NOTHINGX_LOG_FRAMES=1 logs every frame from the earbuds (debugging).
+    static const bool logFrames = qEnvironmentVariableIsSet("NOTHINGX_LOG_FRAMES");
+    if (logFrames && !bytes.isEmpty())
+        qInfo().noquote() << "nothingx rx" << bytes.toHex(' ');
     m_decoder.feed(bytes);
     const bool flush = bytes.isEmpty();
     while (auto frame = m_decoder.next(flush))
@@ -457,6 +461,11 @@ void Device::handle(const Frame &f) {
             break;
         case Cmd::WalkieTalkieRead:
             setValue("walkieTalkie", u8(0) == 1);
+            break;
+        case Cmd::GestureEvent:
+            // The action the official app uses for News Reporter: the earbuds
+            // send it over this link, so the desktop can act on it.
+            emit gestureEvent(leInt(p));
             break;
         case Cmd::FitTestEvent:
             if (p.size() >= 2) {

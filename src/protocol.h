@@ -127,6 +127,7 @@ enum : quint16 {
     GesturesWrite = 0xF003,
     FindWrite = 0xF002,          // [side][01 ring / 00 stop]
     EssentialEvent = 0xE018,     // case TALK button: Essential Space request
+    GestureEvent = 0xE014,       // "magic button": a gesture set to action 31 fired
     EssentialReply = 0xF062,     // 03 = not available on this host
     // Dual connection
     DualRead = 0xC027,

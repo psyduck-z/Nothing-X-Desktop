@@ -17,7 +17,8 @@ const text = {
     "control_skip_forward": "Skip forward",
     "control_skip_back": "Skip back",
     "control_voice_assistant": "Voice assistant",
-    "news_description": "News Reporter",
+    // On the desktop this action triggers the assistant command instead.
+    "news_description": "Desktop assistant",
     "control_no_action": "No action",
     "control_volume_up": "Volume up",
     "control_volume_down": "Volume down",
@@ -62,7 +63,7 @@ function action(code, device) {
     case 21: return "Noise control"
     case 22: return "Noise control"
     case 29: return device === 4 ? "Super Mic" : "Mic on/off"
-    case 31: return "News Reporter"
+    case 31: return "Desktop assistant"
     case 33: return "Essential Space"
     }
     return code < 0 ? "" : "Action " + code
