@@ -182,12 +182,19 @@ from them.
   related names and logos are trademarks of Nothing Technology Limited. They
   are used here only to describe which products this works with. That use
   does not imply any connection with Nothing or endorsement by it.
-- **No Nothing files in this repository.** It contains no code, fonts, icons,
-  images, firmware or app files from Nothing. The app reads its look and
-  device data from a copy of the official app that you supply on your own
-  computer, and nothing from that copy is uploaded or shared. You are
-  responsible for obtaining the official app lawfully and for following its
-  terms.
+- **Credit to Nothing.** The design this app follows is Nothing's: the
+  dot-matrix look, how the controls are laid out and explained, and some of
+  the on-screen wording, which is kept the same as the official app's so the
+  two read alike. The app icon was drawn for this project in that style. Full
+  credit for that design goes to Nothing Technology Limited; any mistakes are
+  this project's own.
+- **No Nothing files in this repository.** It contains no fonts, icons,
+  images, firmware or app files from Nothing, and none of its code. A few
+  short labels and messages are worded the same as the official app's (see
+  the credit above). The app reads its look and device data from a copy of
+  the official app that you supply on your own computer, and nothing from
+  that copy is uploaded or shared. You are responsible for obtaining the
+  official app lawfully and for following its terms.
 - **Interoperability only.** The Bluetooth control protocol was studied only
   so this app can work with earbuds the user owns, alongside the open-source
   community work credited above. It does not use Nothing's servers, does not
