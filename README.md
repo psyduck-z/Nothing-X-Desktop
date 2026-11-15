@@ -92,7 +92,7 @@ popup.
 |---|---|
 | `nothingx` | Start in the tray and open the popup (or toggle it if running) |
 | `nothingx --hidden` | Start in the tray only (used at login) |
-| `nothingx --toggle` / `--show` / `--quit` | Control the running instance |
+| `nothingx --toggle` / `--show` / `--hide` / `--quit` | Control the running instance |
 | `nothingx --import-official FILE` | Import the official app's look and data |
 | `nothingx --demo` | Simulated Ear (3), no Bluetooth needed |
 

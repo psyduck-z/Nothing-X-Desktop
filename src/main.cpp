@@ -35,13 +35,14 @@ int main(int argc, char *argv[]) {
     QCommandLineOption hidden("hidden", "Start in the tray without opening the popup.");
     QCommandLineOption toggle("toggle", "Toggle the popup of the running instance.");
     QCommandLineOption show("show", "Show the popup of the running instance.");
+    QCommandLineOption hide("hide", "Hide the popup of the running instance.");
     QCommandLineOption quit("quit", "Quit the running instance.");
     QCommandLineOption demo("demo", "Use simulated earbuds (no Bluetooth needed).");
     QCommandLineOption screenshots("screenshots", "Developer aid: save every page as PNG into DIR and exit.", "DIR");
     QCommandLineOption importOfficial("import-official",
                                       "Import the look and device data of the official Nothing X app from FILE (.xapk or .apk).",
                                       "FILE");
-    parser.addOptions({hidden, toggle, show, quit, demo, screenshots, importOfficial});
+    parser.addOptions({hidden, toggle, show, hide, quit, demo, screenshots, importOfficial});
     parser.process(app);
 
     if (parser.isSet(importOfficial)) {
@@ -56,10 +57,10 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    const QString command = parser.isSet(quit) ? "quit" : parser.isSet(show) ? "show" : "toggle";
+    const QString command = parser.isSet(quit) ? "quit" : parser.isSet(show) ? "show" : parser.isSet(hide) ? "hide" : "toggle";
     if (!parser.isSet(screenshots) && App::sendToRunning(command))
         return 0;
-    if (parser.isSet(quit))
+    if (parser.isSet(quit) || parser.isSet(hide))
         return 0;
 
     App::Options options;
