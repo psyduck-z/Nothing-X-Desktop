@@ -1,14 +1,21 @@
 # Nothing X (desktop)
 
-The Nothing X phone app's earbuds controls, as a tray popup on **Omarchy**
-(Hyprland) and **Windows**. Both are built from the same source and QML, so
-they look and behave the same, and they update to the same release.
+An unofficial, free desktop companion for Nothing earbuds: the controls of
+the Nothing X phone app, as a tray popup on **Omarchy** (Hyprland) and
+**Windows**. Both are built from the same source and QML, so they look and
+behave the same, and they update to the same release.
 
-Built from the official Nothing X app itself:
-- **Commands and settings.** Every command, payload and setting rule comes
-  from reading the official Android app (v3.10.3), not from guesses. That
-  includes the frame format, reply status codes, LDAC and low-latency values,
-  and the dual-connection commands.
+> **Unofficial, independent and not for profit.** This project is not made,
+> endorsed or supported by Nothing Technology Limited. "Nothing", "Nothing X"
+> and the product names are Nothing's trademarks, used only to say which
+> earbuds this works with. See the [legal notice](#legal-notice).
+
+Made to work the way the official Nothing X app does, so it can talk to
+earbuds you own:
+- **Commands and settings.** The control commands and setting rules follow
+  the official Android app (v3.10.3), studied for interoperability rather
+  than guessed. That includes the frame format, reply status codes, LDAC and
+  low-latency values, and the dual-connection commands.
 - **Look.** It uses Nothing's own fonts (NType 82, Ndot, Geist), icons and
   product photos. These are imported at runtime from your copy of the official
   app, so none of Nothing's files are in this repository.
@@ -17,8 +24,6 @@ Built from the official Nothing X app itself:
   and artwork along.
 
 Made for the **Nothing Ear (3)**.
-
-> Unofficial and open source. Not affiliated with Nothing Technology Ltd.
 
 ## What it does
 
@@ -164,6 +169,34 @@ against the official app:
 [Gadgetbridge](https://codeberg.org/Freeyourgadget/Gadgetbridge),
 [EarA-linux](https://github.com/oneydef/EarA-linux). This app copies no code
 from them.
+
+## Legal notice
+
+- **Unofficial.** This is an independent hobby project. It is not made,
+  sponsored, endorsed, approved or supported by Nothing Technology Limited or
+  its affiliates. For help with your earbuds, use Nothing's official app and
+  support.
+- **Not for profit.** It is free and open source. It is not sold, carries no
+  advertising, and has no commercial purpose.
+- **Trademarks.** "Nothing", "Nothing X", "Ear (3)", "Essential Space" and the
+  related names and logos are trademarks of Nothing Technology Limited. They
+  are used here only to describe which products this works with. That use
+  does not imply any connection with Nothing or endorsement by it.
+- **No Nothing files in this repository.** It contains no code, fonts, icons,
+  images, firmware or app files from Nothing. The app reads its look and
+  device data from a copy of the official app that you supply on your own
+  computer, and nothing from that copy is uploaded or shared. You are
+  responsible for obtaining the official app lawfully and for following its
+  terms.
+- **Interoperability only.** The Bluetooth control protocol was studied only
+  so this app can work with earbuds the user owns, alongside the open-source
+  community work credited above. It does not use Nothing's servers, does not
+  modify or distribute firmware, and does not bypass any copy protection.
+- **No warranty.** It is provided "as is", without warranty of any kind,
+  under the Apache License 2.0. Use it at your own risk. The authors are not
+  liable for any damage to devices, data or anything else.
+- **Requests from Nothing.** If Nothing Technology Limited objects to anything
+  here, open an issue and it will be changed or taken down promptly.
 
 ## License
 
