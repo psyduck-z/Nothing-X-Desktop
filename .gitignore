@@ -426,3 +426,21 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# Nothing X Desktop
+/build/
+/dist/
+packaging/arch/src/
+packaging/arch/pkg/
+packaging/arch/*.pkg.tar.*
+packaging/arch/*.tar.gz
+.qmake.stash
+# The Visual Studio rules above ignore every bin/ folder; ours holds scripts.
+!/bin/
+!/bin/*
+
+# The official Nothing X app and everything unpacked or decompiled from it stay
+# on this computer: it is Nothing's copyrighted software, and this repo is public.
+*.xapk
+*.apk
+/official/

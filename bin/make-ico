@@ -1,0 +1,8 @@
+#!/bin/sh
+# Regenerates packaging/windows/nothingx.ico from packaging/nothingx.svg, so
+# Windows and Omarchy ship the same icon. Needs ImageMagick (`magick`).
+set -eu
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+magick -background none -density 384 "$ROOT/packaging/nothingx.svg" \
+  -define icon:auto-resize=256,128,64,48,32,24,16 "$ROOT/packaging/windows/nothingx.ico"
+echo "Wrote $ROOT/packaging/windows/nothingx.ico"

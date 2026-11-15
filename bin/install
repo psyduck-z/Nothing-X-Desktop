@@ -1,0 +1,14 @@
+#!/bin/sh
+# Builds the Arch package from this checkout and installs it, so Nothing X
+# shows up in the Omarchy app launcher (Super + Space). If a copy of the
+# official Nothing X app (.xapk or .apk) sits in this folder, its look and
+# device data are imported for the current user too.
+set -eu
+
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+(cd "$ROOT/packaging/arch" && makepkg -fsi "$@")
+
+for official in "$ROOT"/*.xapk "$ROOT"/*.apk; do
+  [ -f "$official" ] || continue
+  /usr/bin/nothingx --import-official "$official"
+done

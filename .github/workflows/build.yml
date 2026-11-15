@@ -1,0 +1,67 @@
+# Builds the same sources for Omarchy (Arch) and Windows on every push, so the
+# two versions can't drift apart. Pushing a tag like v0.2.0 also publishes a
+# GitHub release with both builds; the app's updater installs from there.
+name: build
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install Qt
+        run: |
+          pacman -Syu --noconfirm --needed base-devel git sudo qt6-base qt6-declarative qt6-svg \
+            qt6-connectivity qt6-wayland layer-shell-qt bluez-libs
+      - uses: actions/checkout@v4
+      - name: Test
+        run: bin/test
+      - name: Package
+        run: |
+          useradd -m builder
+          chown -R builder .
+          sudo -u builder sh -c 'cd packaging/arch && makepkg -f --nodeps'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nothingx-arch
+          path: packaging/arch/*.pkg.tar.zst
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.3"
+          arch: win64_msvc2022_64
+          modules: qtconnectivity
+      - name: Build
+        shell: pwsh
+        run: .\packaging\windows\build.ps1 -QtDir "$env:QT_ROOT_DIR"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nothingx-windows
+          path: dist/windows/NothingX-Setup-*.exe
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

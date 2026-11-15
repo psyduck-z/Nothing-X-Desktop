@@ -1,0 +1,43 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/app.svg</file>
+        <file>icons/tray.svg</file>
+        <file>qml/AboutPage.qml</file>
+        <file>qml/AppSettingsPage.qml</file>
+        <file>qml/BatteryView.qml</file>
+        <file>qml/Card.qml</file>
+        <file>qml/ConfirmSheet.qml</file>
+        <file>qml/ControlsPage.qml</file>
+        <file>qml/DeviceSettingsPage.qml</file>
+        <file>qml/DevicesPage.qml</file>
+        <file>qml/Dot.qml</file>
+        <file>qml/DualConnectionPage.qml</file>
+        <file>qml/EqBandSlider.qml</file>
+        <file>qml/EqCurve.qml</file>
+        <file>qml/EqualizerPage.qml</file>
+        <file>qml/FindPage.qml</file>
+        <file>qml/FitTestPage.qml</file>
+        <file>qml/GesturePage.qml</file>
+        <file>qml/Headline.qml</file>
+        <file>qml/HighQualityAudioPage.qml</file>
+        <file>qml/HomePage.qml</file>
+        <file>qml/Icon.qml</file>
+        <file>qml/ListRow.qml</file>
+        <file>qml/Main.qml</file>
+        <file>qml/ModeButton.qml</file>
+        <file>qml/NtSwitch.qml</file>
+        <file>qml/PageHeader.qml</file>
+        <file>qml/Pill.qml</file>
+        <file>qml/ProductImage.qml</file>
+        <file>qml/ScrollPage.qml</file>
+        <file>qml/SectionLabel.qml</file>
+        <file>qml/Segmented.qml</file>
+        <file>qml/StepDots.qml</file>
+        <file>qml/Stepper.qml</file>
+        <file>qml/Strings.js</file>
+        <file>qml/SuperMicPage.qml</file>
+        <file>qml/Tile.qml</file>
+        <file>qml/Toast.qml</file>
+        <file>qml/Txt.qml</file>
+    </qresource>
+</RCC>
