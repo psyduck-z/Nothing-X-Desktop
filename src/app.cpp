@@ -106,9 +106,12 @@ bool App::start() {
     connect(m_tray.get(), &TrayIcon::quitRequested, this, &App::quit);
 
     // A second launch (app launcher, keybinding) talks to this instance
-    // instead of starting another tray icon.
-    QLocalServer::removeServer(serverName());
-    m_server.listen(serverName());
+    // instead of starting another tray icon. The demo, the screenshots and
+    // the tests leave the real app's socket alone.
+    if (realRun) {
+        QLocalServer::removeServer(serverName());
+        m_server.listen(serverName());
+    }
     connect(&m_server, &QLocalServer::newConnection, this, [this] {
         while (QLocalSocket *socket = m_server.nextPendingConnection()) {
             connect(socket, &QLocalSocket::readyRead, socket, [this, socket] {

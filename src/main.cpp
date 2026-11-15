@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     }
 
     const QString command = parser.isSet(quit) ? "quit" : parser.isSet(show) ? "show" : parser.isSet(hide) ? "hide" : "toggle";
-    if (!parser.isSet(screenshots) && App::sendToRunning(command))
+    if (!parser.isSet(screenshots) && !parser.isSet(demo) && App::sendToRunning(command))
         return 0;
     if (parser.isSet(quit) || parser.isSet(hide))
         return 0;
