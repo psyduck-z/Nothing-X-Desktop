@@ -128,7 +128,7 @@ void TrayIcon::refresh() {
             lowest = lowest < 0 ? v : qMin(lowest, v);
     // The icon shows the earbud that will run out first; the case only when
     // no earbud has reported yet.
-    const int shown = lowest >= 0 ? lowest : m_device->batteryCase();
+    const int shown = lowest >= 0 ? lowest : m_device->caseRemembered() ? -1 : m_device->batteryCase();
 
     Look look = Disconnected;
     if (connected)
@@ -142,7 +142,8 @@ void TrayIcon::refresh() {
         lines << m_device->displayName();
         QStringList parts;
         auto fmt = [](const QString &label, int v) { return v >= 0 ? QStringLiteral("%1 %2%").arg(label).arg(v) : QString(); };
-        for (const auto &s : {fmt(tr("L"), left), fmt(tr("R"), right), fmt(tr("Case"), m_device->batteryCase())})
+        const QString caseLabel = m_device->caseRemembered() ? tr("Case (last seen)") : tr("Case");
+        for (const auto &s : {fmt(tr("L"), left), fmt(tr("R"), right), fmt(caseLabel, m_device->batteryCase())})
             if (!s.isEmpty())
                 parts << s;
         if (!parts.isEmpty())

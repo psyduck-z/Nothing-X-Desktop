@@ -11,7 +11,7 @@ Row {
             { label: qsTr("Right"), level: device.batteryRight, charging: device.chargingRight, inEar: device.rightInEar }
         ]
         if (showCase)
-            p.push({ label: qsTr("Case"), level: device.batteryCase, charging: device.chargingCase, inEar: false })
+            p.push({ label: qsTr("Case"), level: device.batteryCase, charging: device.chargingCase && !device.caseRemembered, inEar: false, remembered: device.caseRemembered })
         return p
     }
     Repeater {
@@ -26,7 +26,8 @@ Row {
                 Dot {
                     text: modelData.level >= 0 ? modelData.level : "--"
                     size: 30
-                    color: modelData.level >= 0 && modelData.level <= 20 && !modelData.charging ? theme.accent : theme.text
+                    color: modelData.remembered ? theme.textMuted
+                        : modelData.level >= 0 && modelData.level <= 20 && !modelData.charging ? theme.accent : theme.text
                 }
                 Dot { text: "%"; size: 16; color: theme.textMuted; anchors.bottom: parent.bottom; anchors.bottomMargin: 4; visible: modelData.level >= 0 }
             }
@@ -39,7 +40,9 @@ Row {
                     visible: modelData.charging
                     color: theme.charging
                 }
-                SectionLabel { text: modelData.label + (modelData.charging ? " · " + qsTr("Charging") : "") }
+                SectionLabel {
+                    text: modelData.label + (modelData.charging ? " · " + qsTr("Charging") : modelData.remembered ? " · " + qsTr("Last seen") : "")
+                }
             }
         }
     }

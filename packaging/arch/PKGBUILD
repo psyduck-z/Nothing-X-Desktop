@@ -1,6 +1,6 @@
 # Builds Nothing X from the checkout this PKGBUILD lives in (bin/install).
 pkgname=nothingx
-pkgver=0.1.0
+pkgver=3.10.3.1
 pkgrel=1
 pkgdesc="Nothing X for the desktop: control Nothing earbuds from the tray"
 arch=('x86_64' 'aarch64')

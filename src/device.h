@@ -37,6 +37,9 @@ class Device : public QObject {
     Q_PROPERTY(bool chargingLeft READ chargingLeft NOTIFY batteryChanged)
     Q_PROPERTY(bool chargingRight READ chargingRight NOTIFY batteryChanged)
     Q_PROPERTY(bool chargingCase READ chargingCase NOTIFY batteryChanged)
+    // The case only reports while it can (lid open, a bud inside); otherwise
+    // its last known level is shown, as the official app does.
+    Q_PROPERTY(bool caseRemembered READ caseRemembered NOTIFY batteryChanged)
     Q_PROPERTY(bool leftInEar READ leftInEar NOTIFY batteryChanged)
     Q_PROPERTY(bool rightInEar READ rightInEar NOTIFY batteryChanged)
     Q_PROPERTY(int ancMode READ ancMode NOTIFY ancChanged)
@@ -66,7 +69,8 @@ public:
     QVariantList gestureGroups() const { return m_model.gestureGroups; }
     int batteryLeft() const { return m_battery.left.level; }
     int batteryRight() const { return m_battery.right.level; }
-    int batteryCase() const { return m_battery.caseUnit.level; }
+    int batteryCase() const;
+    bool caseRemembered() const { return m_battery.caseUnit.level < 0 && m_caseLast >= 0; }
     bool chargingLeft() const { return m_battery.left.charging; }
     bool chargingRight() const { return m_battery.right.charging; }
     bool chargingCase() const { return m_battery.caseUnit.charging; }
@@ -186,4 +190,5 @@ private:
     QVector<Proto::EqBand> m_bands;
     QList<Proto::Gesture> m_gestures;
     QList<Proto::PairedDevice> m_paired;
+    int m_caseLast = -1;
 };

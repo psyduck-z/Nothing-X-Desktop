@@ -104,6 +104,8 @@ Device::Device(Transport *transport, Settings *settings, OfficialPack *pack, QOb
 
 Device::~Device() { m_transport->disconnect(this); }
 
+int Device::batteryCase() const { return m_battery.caseUnit.level >= 0 ? m_battery.caseUnit.level : m_caseLast; }
+
 QString Device::displayName() const {
     if (!m_model.name.isEmpty())
         return m_model.name;
@@ -132,6 +134,7 @@ void Device::connectToDevice(const QString &address, const QString &name) {
     m_bluetoothName = name;
     m_battery = {};
     m_wear = {};
+    m_caseLast = m_settings->deviceValue(address, "caseBattery", -1).toInt();
     m_values.clear();
     m_paired.clear();
     m_gestures.clear();
@@ -342,15 +345,26 @@ void Device::handle(const Frame &f) {
             }
             break;
         case Cmd::BatteryRead:
-        case Cmd::BatteryEvent:
+        case Cmd::BatteryEvent: {
+            const int caseBefore = m_battery.caseUnit.level;
             mergeBattery(m_battery, p);
+            if (m_battery.caseUnit.level >= 0 && m_battery.caseUnit.level != caseBefore) {
+                m_caseLast = m_battery.caseUnit.level;
+                m_settings->setDeviceValue(m_address, "caseBattery", m_caseLast);
+            }
             emit batteryChanged();
             break;
+        }
         case Cmd::StatusRead:
-        case Cmd::StatusEvent:
+        case Cmd::StatusEvent: {
+            const int caseBefore = m_wear.caseUnit;
             mergeWear(m_wear, p);
             emit batteryChanged();
+            // The lid opened or a bud went in or out: the case may report now.
+            if (f.cmd == Cmd::StatusEvent && m_wear.caseUnit != caseBefore)
+                read(Cmd::BatteryRead);
             break;
+        }
         case Cmd::AncRead:
         case Cmd::AncEvent: {
             const AncState anc = parseAnc(p);

@@ -68,7 +68,7 @@ Item {
         }
     }
 
-    Flickable {
+    ScrollArea {
         id: flick
         anchors.top: top.bottom
         anchors.topMargin: 8
@@ -76,9 +76,6 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         contentHeight: column.implicitHeight + 16
-        clip: true
-        boundsBehavior: Flickable.StopAtBounds
-        ScrollBar.vertical: ScrollBar { width: 4; policy: ScrollBar.AsNeeded }
 
         Column {
             id: column

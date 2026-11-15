@@ -9,7 +9,10 @@ QT += core gui widgets qml quick quickcontrols2 svg bluetooth network
 CONFIG += c++20 release
 TARGET = nothingx
 TEMPLATE = app
-VERSION = 0.1.0
+# The official Nothing X version this build follows, then the desktop build:
+# 3.10.3.1 is the first desktop build of Nothing X 3.10.3. Windows and
+# Omarchy always ship the same number.
+VERSION = 3.10.3.1
 DEFINES += NOTHINGX_VERSION=\\\"$$VERSION\\\" NOTHINGX_REPO=\\\"psyduck-z/Nothing-X-Desktop\\\"
 
 include(src/sources.pri)

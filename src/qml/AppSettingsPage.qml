@@ -61,7 +61,7 @@ ScrollPage {
         Txt {
             width: parent.width
             text: official.available
-                ? qsTr("Using the look and device data of Nothing X %1. A newer version in your Downloads folder is picked up automatically.").arg(official.version)
+                ? qsTr("Using the look and device data of the official Nothing X %1. A newer version in your Downloads folder is picked up automatically.").arg(official.version)
                 : qsTr("Not imported. Import the official app (.xapk or .apk) for Nothing's fonts, icons and product images.")
             size: 13
             color: theme.textMuted
@@ -77,8 +77,11 @@ ScrollPage {
     Card {
         SectionLabel { text: qsTr("Updates") }
         ListRow {
-            title: qsTr("Nothing X %1").arg(updater.currentVersion)
-            subtitle: updater.status !== "" ? updater.status : qsTr("Same version on Windows and Omarchy")
+            // 3.10.3.1: the official version followed, then the desktop build.
+            readonly property var parts: updater.currentVersion.split(".")
+            title: qsTr("Nothing X %1").arg(parts.slice(0, 3).join("."))
+            subtitle: (updater.status !== "" ? updater.status + " · " : "")
+                + qsTr("Desktop build %1, the same on Windows and Omarchy").arg(parts.length > 3 ? parts[3] : "1")
         }
         ListRow {
             title: qsTr("Update automatically")

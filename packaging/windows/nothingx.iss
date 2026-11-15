@@ -1,6 +1,6 @@
 ; Inno Setup script for Nothing X (built by build.ps1).
 #ifndef AppVersion
-  #define AppVersion "0.1.0"
+  #define AppVersion "3.10.3.1"
 #endif
 
 [Setup]

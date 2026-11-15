@@ -145,7 +145,9 @@ build/nothingx --demo                    # try the UI without earbuds
 build/nothingx --screenshots /tmp/shots  # render every page to PNG
 ```
 
-Releases: bump `VERSION` in `nothingx.pro`, then push a tag `v<version>`.
+Versions follow the official app: `3.10.3.1` is the first desktop build of
+Nothing X 3.10.3. Release by bumping `VERSION` in `nothingx.pro` and pushing
+a tag `v<version>`; CI publishes both platforms.
 
 ## Credits
 

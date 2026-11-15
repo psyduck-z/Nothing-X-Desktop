@@ -29,6 +29,7 @@
         <file>qml/PageHeader.qml</file>
         <file>qml/Pill.qml</file>
         <file>qml/ProductImage.qml</file>
+        <file>qml/ScrollArea.qml</file>
         <file>qml/ScrollPage.qml</file>
         <file>qml/SectionLabel.qml</file>
         <file>qml/Segmented.qml</file>
