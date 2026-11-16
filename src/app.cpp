@@ -15,6 +15,7 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QLocalSocket>
@@ -154,6 +155,19 @@ bool App::start() {
     connect(m_device.get(), &Device::gestureEvent, this, [this](int value) {
         if (value == 31)
             runAssistant();
+    });
+    // The case's TALK button can't be set to that action, but it can be set
+    // to Essential Space, which reports each press to the host - shown here
+    // as "Desktop assistant" too. Kind 1 is the press that starts a
+    // recording on a Nothing phone; the others (letting go, stopping) are
+    // not presses of their own. A second report of the same press, within
+    // a moment, is not one either.
+    auto lastTalk = std::make_shared<QElapsedTimer>();
+    connect(m_device.get(), &Device::talkButton, this, [this, lastTalk](int, int type) {
+        if (type != 1 || (lastTalk->isValid() && lastTalk->elapsed() < 1500))
+            return;
+        lastTalk->start();
+        runAssistant();
     });
 
     // Reconnect to the last earbuds whenever they connect to the computer.

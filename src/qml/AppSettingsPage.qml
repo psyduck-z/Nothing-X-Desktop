@@ -60,7 +60,7 @@ ScrollPage {
         SectionLabel { text: qsTr("Assistant") }
         Txt {
             width: parent.width
-            text: qsTr("Set an earbuds gesture to \u201cDesktop assistant\u201d under Controls, and it runs this command, with no phone involved.")
+            text: qsTr("Set an earbuds gesture or the case's TALK button to \u201cDesktop assistant\u201d under Controls, and it runs this command, with no phone involved.")
             size: 13
             color: theme.textMuted
         }

@@ -303,10 +303,17 @@ void Device::handle(const Frame &f) {
         m_transport->write(encode(Cmd::TimeWrite, timePayload(QDateTime::currentSecsSinceEpoch()), m_fsn.next()));
         return;
     }
-    // The case's TALK button asked for an Essential Space recording, which
-    // only Nothing phones can make: say it isn't available here.
+    // The case's TALK button, set to Essential Space, asked for a recording.
+    // Only Nothing phones can make one, so the earbuds are told it isn't
+    // available here, as the official app tells them on other phones; the
+    // press itself is passed on, for the desktop assistant. Byte 0 is
+    // "enable", byte 1 the kind (1 starts a recording on the phone).
     if (f.cmd == Cmd::EssentialEvent) {
+        const int enable = f.payload.size() > 0 ? quint8(f.payload[0]) : -1;
+        const int type = f.payload.size() > 1 ? quint8(f.payload[1]) : -1;
+        qInfo().noquote() << "nothingx: TALK button" << f.payload.toHex(' ');
         m_transport->write(encode(Cmd::EssentialReply, QByteArray(1, 3), m_fsn.next()));
+        emit talkButton(enable, type);
         return;
     }
 

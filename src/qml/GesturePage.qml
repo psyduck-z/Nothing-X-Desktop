@@ -16,6 +16,10 @@ ScrollPage {
     readonly property int current: { device.gestures; return device.gestureAction(root.part, root.gesture) }
     title: qsTr(S.t(entry.nameKey))
 
+    // The action the computer answers: News on the earbuds, Essential
+    // Space on the case's TALK button.
+    function isDesktop(action) { return action === (root.part === 4 ? 33 : 31) }
+
     SectionLabel {
         text: root.part === 2 ? qsTr("Left earbud") : root.part === 3 ? qsTr("Right earbud") : qsTr("Talk button")
     }
@@ -24,13 +28,15 @@ ScrollPage {
         spacing: 2
         Repeater {
             // Phone-only actions (News, Essential Space) need a Nothing phone;
-            // they are listed only while one of them is set.
-            model: root.entry.options.filter((o) => !o.phoneOnly || o.action === 31 || o.action === root.current)
+            // they are listed only while one of them is set, or where the
+            // desktop takes them over: News on the earbuds, Essential Space
+            // on the case's TALK button, both shown as "Desktop assistant".
+            model: root.entry.options.filter((o) => !o.phoneOnly || root.isDesktop(o.action) || o.action === root.current)
             delegate: Column {
                 required property var modelData
                 required property int index
                 width: parent.width
-                readonly property var all: root.entry.options.filter((o) => !o.phoneOnly || o.action === 31 || o.action === root.current)
+                readonly property var all: root.entry.options.filter((o) => !o.phoneOnly || root.isDesktop(o.action) || o.action === root.current)
                 readonly property bool newGroup: index === 0 || all[index - 1].group !== modelData.group
                 readonly property bool isCycle: modelData.action === 10
                 readonly property bool selected: isCycle ? S.isNoiseCycle(root.current) : modelData.action === root.current
@@ -46,7 +52,8 @@ ScrollPage {
                     opacity: modelData.custom ? 1 : 0.6
                     Txt {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: modelData.keys.map((k) => qsTr(S.t(k))).join(" · ")
+                        text: root.isDesktop(modelData.action) ? qsTr("Desktop assistant")
+                            : modelData.keys.map((k) => qsTr(S.t(k))).join(" · ")
                         size: 15
                         width: parent.width - 40
                     }
@@ -112,17 +119,17 @@ ScrollPage {
                     }
                 }
                 Txt {
-                    visible: modelData.action === 31 && parent.selected
+                    readonly property string command: settings.assistantCommand !== "" ? settings.assistantCommand : app.assistantFallback
+                    visible: root.isDesktop(modelData.action) && parent.selected
                     width: parent.width
-                    text: settings.assistantCommand !== ""
-                        ? qsTr("Runs %1").arg(settings.assistantCommand)
-                        : qsTr("Choose what this runs in App settings › Assistant.")
+                    text: (root.part === 4 ? qsTr("Press and hold the TALK button to start a conversation; do it again to end it.") + " " : "")
+                        + (command !== "" ? qsTr("Runs %1").arg(command) : qsTr("Choose what this runs in App settings › Assistant."))
                     size: 12
-                    color: settings.assistantCommand !== "" ? theme.textMuted : theme.accent
+                    color: command !== "" ? theme.textMuted : theme.accent
                     bottomPadding: 8
                 }
                 Txt {
-                    visible: modelData.tipKey !== "" && (parent.selected || !modelData.custom)
+                    visible: modelData.tipKey !== "" && !root.isDesktop(modelData.action) && (parent.selected || !modelData.custom)
                     width: parent.width
                     text: qsTr(S.t(modelData.tipKey))
                     size: 12

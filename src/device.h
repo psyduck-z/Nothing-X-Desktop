@@ -142,6 +142,9 @@ signals:
     void fitTestFinished(int left, int right);
     // A gesture set to the earbuds' event action fired (value 31).
     void gestureEvent(int value);
+    // The case's TALK button, set to Essential Space (on the desktop: the
+    // desktop assistant), was pressed: the two bytes the earbuds sent.
+    void talkButton(int enable, int type);
 
 private:
     using Handler = std::function<void(const Proto::Frame &)>;

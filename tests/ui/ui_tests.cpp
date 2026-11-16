@@ -109,6 +109,12 @@ int main(int argc, char **argv) {
     check("hold cycle now includes Off (10)", eval("device.gestureAction(2, 7)").toInt() == 10);
     check("right earbud follows the cycle", eval("device.gestureAction(3, 7)").toInt() == 10);
     QTest::keyClick(win(), Qt::Key_Escape); QTest::qWait(300);
+    click("Talk button");
+    click("Press and hold");
+    click("Desktop assistant");
+    check("TALK button -> Desktop assistant (Essential Space, 33)", eval("device.gestureAction(4, 7)").toInt() == 33);
+    if (!qEnvironmentVariableIsEmpty("UI_SHOT")) win()->grabWindow().save(qEnvironmentVariable("UI_SHOT"));
+    QTest::keyClick(win(), Qt::Key_Escape); QTest::qWait(300);
     QTest::keyClick(win(), Qt::Key_Escape); QTest::qWait(300);
 
     click("Device Settings");

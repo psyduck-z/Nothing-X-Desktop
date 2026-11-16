@@ -411,6 +411,21 @@ private slots:
         QCOMPARE(events.first().first().toInt(), 31);
     }
 
+    void talkButtonReachesTheDesktop() {
+        Rig r;
+        QTRY_VERIFY(r.ready());
+        QSignalSpy presses(&r.device, &Device::talkButton);
+        // The case's TALK button set to Essential Space: enable 1, kind 1.
+        r.transport->push(0xE018, hex("0101"));
+        QTRY_COMPARE(presses.size(), 1);
+        QCOMPARE(presses.first().at(0).toInt(), 1);
+        QCOMPARE(presses.first().at(1).toInt(), 1);
+        // Told, as the official app tells other phones, that there is no
+        // Essential Space recording here.
+        QTRY_COMPARE(r.sentWith(Cmd::EssentialReply).size(), 1);
+        QCOMPARE(r.sentWith(Cmd::EssentialReply).first().payload, hex("03"));
+    }
+
     // --- Official app import, updates, tray -------------------------------------------
     void importsAnOfficialApp() {
         const QString tar = QStandardPaths::findExecutable("bsdtar");

@@ -64,7 +64,9 @@ function action(code, device) {
     case 22: return "Noise control"
     case 29: return device === 4 ? "Super Mic" : "Mic on/off"
     case 31: return "Desktop assistant"
-    case 33: return "Essential Space"
+    // The case's TALK button can't be set to 31; Essential Space reports
+    // its presses to the computer instead, which runs the assistant.
+    case 33: return device === 4 ? "Desktop assistant" : "Essential Space"
     }
     return code < 0 ? "" : "Action " + code
 }

@@ -44,7 +44,7 @@ Made for the **Nothing Ear (3)**.
 | Ear tip fit test | Home |
 | Find my earbuds (ring left or right) | Home |
 | Firmware versions (earbuds and case), serial number, colour | Device details |
-| News Reporter gesture (Nothing phones only) | **Desktop assistant**: set any gesture to it and it runs your assistant command (App settings › Assistant), no phone involved |
+| News Reporter gesture, and Essential Space on the case's TALK button (Nothing phones only) | **Desktop assistant**: set any gesture, or the TALK button's press and hold, to it and it runs your assistant command (App settings › Assistant), no phone involved |
 
 The app also applies the official app's rules between settings. For example,
 turning on spatial audio turns off LDAC, Adaptive ANC and (on the Ear (3))
@@ -56,7 +56,8 @@ These still need the phone app:
 - **Creating a Personal Sound Profile** runs a hearing test in a closed SDK.
   The desktop app turns an existing profile on and off.
 - **The online EQ library.**
-- **Essential Space** works with Nothing phones only.
+- **Essential Space** works with Nothing phones only. On the desktop, the
+  TALK button's Essential Space setting is shown as Desktop assistant.
 
 The earbuds' own "Voice assistant" gesture asks for the phone's voice dialling,
 which a computer doesn't pass on to apps. Use **Desktop assistant** instead.
