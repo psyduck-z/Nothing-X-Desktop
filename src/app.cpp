@@ -193,6 +193,20 @@ bool App::start() {
         connect(watch, &QTimer::timeout, this, tryConnect);
         watch->start();
         tryConnect();
+
+        // The link can drop for a moment while the earbuds stay connected -
+        // some laptops' Bluetooth does when the earbuds switch to headset
+        // mode for a call - and a gesture made before it is back is lost.
+        // So a dropped link is tried again a second later, and again a
+        // little after that, rather than at the next five-second look.
+        auto wasConnected = std::make_shared<bool>(false);
+        connect(m_device.get(), &Device::stateChanged, this, [this, tryConnect, wasConnected] {
+            if (*wasConnected && m_device->state() == Device::Disconnected) {
+                QTimer::singleShot(1000, this, tryConnect);
+                QTimer::singleShot(2500, this, tryConnect);
+            }
+            *wasConnected = m_device->state() == Device::Connected;
+        });
     }
 
     if (!m_options.screenshotDir.isEmpty()) {
