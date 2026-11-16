@@ -60,6 +60,11 @@ These still need the phone app:
 
 The earbuds' own "Voice assistant" gesture asks for the phone's voice dialling,
 which a computer doesn't pass on to apps. Use **Desktop assistant** instead.
+With App settings › Assistant left empty it runs
+Wumpy (`wumpy --voice`) if it is installed
+where its installer puts it, on Omarchy or Windows. Anything typed there runs
+instead, as it would at a prompt: through `sh` on Omarchy and `cmd` on
+Windows, where a quoted path with spaces works as typed.
 
 ## Install on Omarchy
 
