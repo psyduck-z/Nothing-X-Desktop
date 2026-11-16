@@ -2,6 +2,7 @@
 // X app's code (frame layout, CRC, payload builders), not from the app's own
 // output, so they check this implementation against the official rules.
 
+#include "app.h"
 #include "demotransport.h"
 #include "device.h"
 #include "modelconfig.h"
@@ -63,6 +64,16 @@ class Tests : public QObject {
     Q_OBJECT
 
 private slots:
+    // --- Assistant gesture ---------------------------------------------------
+    // Windows paths have spaces in them, and cmd strips the outer pair of
+    // quotes after /s /c, leaving the command exactly as it was typed.
+    void assistantCommandReachesCmdIntact() {
+        QCOMPARE(App::voiceCommand(QStringLiteral("/home/me/.local/bin/wumpy")),
+                 QStringLiteral("\"/home/me/.local/bin/wumpy\" --voice"));
+        const QString typed = QStringLiteral("\"C:\\Users\\Jo Doe\\Wumpy.exe\" --voice");
+        QCOMPARE(App::cmdArguments(typed), QStringLiteral("/d /s /c \"") + typed + QStringLiteral("\""));
+    }
+
     // --- Framing -------------------------------------------------------------
     void crcCheckValue() { QCOMPARE(crc16("123456789"), quint16(0x4B37)); }
 

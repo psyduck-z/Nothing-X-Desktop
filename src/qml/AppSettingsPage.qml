@@ -64,16 +64,27 @@ ScrollPage {
             size: 13
             color: theme.textMuted
         }
+        // Left empty, it runs Wumpy where its installer put it, which is
+        // what the placeholder shows. Windows has no `wumpy` on PATH, so
+        // its example is a full path in quotes.
         TextBox {
             width: parent.width
             mono: true
             text: settings.assistantCommand
-            placeholder: app.platform === "windows" ? qsTr("e.g. wumpy --voice") : qsTr("e.g. wumpy --voice")
+            placeholder: app.assistantFallback !== "" ? app.assistantFallback
+                : app.platform === "windows" ? qsTr("e.g. \"C:\\Path\\To\\App.exe\" --voice") : qsTr("e.g. wumpy --voice")
             onCommitted: (value) => settings.assistantCommand = value
+        }
+        Txt {
+            width: parent.width
+            visible: settings.assistantCommand === "" && app.assistantFallback !== ""
+            text: qsTr("Left empty, it runs Wumpy.")
+            size: 13
+            color: theme.textMuted
         }
         Pill {
             text: qsTr("Try it")
-            enabled2: settings.assistantCommand !== ""
+            enabled2: settings.assistantCommand !== "" || app.assistantFallback !== ""
             onClicked: app.runAssistant()
         }
     }

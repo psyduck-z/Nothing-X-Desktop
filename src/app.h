@@ -21,6 +21,7 @@ class App : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(QString platform READ platform CONSTANT)
+    Q_PROPERTY(QString assistantFallback READ assistantFallback CONSTANT)
     Q_PROPERTY(bool demo READ demo CONSTANT)
 
 public:
@@ -49,6 +50,13 @@ public:
     Q_INVOKABLE void chooseOfficialApp();
     // Runs the assistant command (also what the earbuds gesture does).
     Q_INVOKABLE void runAssistant();
+    // What runs when no assistant command was typed: Wumpy, where its
+    // installer puts it, or empty if it is not there.
+    QString assistantFallback() const;
+    // `exe --voice`, with the path quoted for the shell that runs it.
+    static QString voiceCommand(const QString &exe);
+    // What cmd.exe is given, so it runs `command` exactly as if typed.
+    static QString cmdArguments(const QString &command);
 
     static QString serverName();
     // Sends `command` to a running instance; true if one answered.

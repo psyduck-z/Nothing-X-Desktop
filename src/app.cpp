@@ -16,6 +16,7 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QLocalSocket>
 #include <QProcess>
 #include <QQmlContext>
@@ -223,14 +224,49 @@ void App::quit() {
     QTimer::singleShot(0, qApp, &QApplication::quit);
 }
 
+QString App::voiceCommand(const QString &exe) {
+    return QStringLiteral("\"%1\" --voice").arg(QDir::toNativeSeparators(exe));
+}
+
+QString App::cmdArguments(const QString &command) {
+    return QStringLiteral("/d /s /c \"%1\"").arg(command);
+}
+
+QString App::assistantFallback() const {
+#ifdef Q_OS_WIN
+    // Wumpy's installer is per user and puts it here unless told otherwise;
+    // it adds nothing to PATH, so a bare "wumpy" would not be found.
+    const QString exe = QDir(qEnvironmentVariable("LOCALAPPDATA")).filePath(QStringLiteral("Programs/Wumpy/Wumpy.exe"));
+#else
+    const QString exe = QDir::home().filePath(QStringLiteral(".local/bin/wumpy"));
+#endif
+    return QFileInfo::exists(exe) ? voiceCommand(exe) : QString();
+}
+
 void App::runAssistant() {
-    const QString command = m_settings->assistantCommand();
+    QString command = m_settings->assistantCommand();
+    if (command.isEmpty())
+        command = assistantFallback();
     if (command.isEmpty()) {
         m_tray->notify(tr("Desktop assistant"), tr("Choose what the gesture runs in Nothing X › App settings › Assistant."));
         return;
     }
 #ifdef Q_OS_WIN
-    const bool started = QProcess::startDetached("cmd.exe", {"/c", command});
+    // Through cmd, so the command can be anything that runs at a prompt.
+    // Given to cmd as an ordinary argument, Qt would escape the command's
+    // own quotes as \", which cmd does not read as quotes, so a quoted path
+    // with a space in it - most of them, on Windows - would not run. /s /c
+    // with the command in one more pair of quotes is the form cmd strips
+    // back to exactly what was typed. No window, so a gesture does not
+    // flash a console.
+    constexpr unsigned long CreateNoWindow = 0x08000000; // CREATE_NO_WINDOW
+    QProcess process;
+    process.setProgram(QStringLiteral("cmd.exe"));
+    process.setNativeArguments(cmdArguments(command));
+    process.setCreateProcessArgumentsModifier([](QProcess::CreateProcessArguments *args) {
+        args->flags |= CreateNoWindow;
+    });
+    const bool started = process.startDetached();
 #else
     const bool started = QProcess::startDetached("sh", {"-c", command});
 #endif
