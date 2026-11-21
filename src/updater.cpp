@@ -12,7 +12,7 @@
 #include <QStandardPaths>
 
 Updater::Updater(const QString &currentVersion, QObject *parent) : QObject(parent), m_current(currentVersion) {
-    m_timer.setInterval(12 * 60 * 60 * 1000);
+    m_timer.setInterval(60 * 60 * 1000);
     connect(&m_timer, &QTimer::timeout, this, &Updater::check);
 }
 
@@ -22,6 +22,14 @@ QString Updater::releasesUrl() {
 
 bool Updater::updateAvailable() const {
     return !m_latest.isEmpty() && OfficialPack::compareVersions(m_latest, m_current) > 0 && !m_asset.isEmpty();
+}
+
+bool Updater::releaseBuild() {
+#ifdef NOTHINGX_RELEASE_BUILD
+    return true;
+#else
+    return false;
+#endif
 }
 
 bool Updater::canInstall() const {

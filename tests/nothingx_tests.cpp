@@ -490,6 +490,12 @@ private slots:
         QCOMPARE(Updater::pickAsset(assets, true).value("name").toString(), QString("NothingX-Setup-0.2.0.exe"));
         QCOMPARE(Updater::pickAsset(assets, false).value("name").toString(), QString("nothingx-0.2.0-1-x86_64.pkg.tar.zst"));
         QVERIFY(Updater::releasesUrl().contains("psyduck-z/Nothing-X-Desktop"));
+        // CI numbers each build after the official version: 3.10.3.<run>.
+        QVERIFY(OfficialPack::compareVersions("3.10.3.17", "3.10.3.1") > 0);
+        QVERIFY(OfficialPack::compareVersions("3.10.3.17", "3.10.3.9") > 0);
+        QVERIFY(OfficialPack::compareVersions("3.10.4.2", "3.10.3.40") > 0);
+        // The tests are built from source, so they never update themselves.
+        QVERIFY(!Updater::releaseBuild());
     }
 
     void trayShowsBatteryRoundedToFive() {

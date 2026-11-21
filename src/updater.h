@@ -13,6 +13,11 @@ class QNetworkReply;
 // same tag, so both platforms always run the same version. On Windows the
 // installer runs quietly and restarts the app; on Omarchy the package is
 // installed with pacman (through the system's password prompt).
+//
+// Every push to main publishes a release (.github/workflows/build.yml), and
+// those builds are marked NOTHINGX_RELEASE_BUILD. Only they look for updates
+// on their own: a build from a source checkout updates with git pull and
+// bin/install, and would otherwise be told about every push.
 class Updater : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString currentVersion READ currentVersion CONSTANT)
@@ -22,6 +27,7 @@ class Updater : public QObject {
     Q_PROPERTY(QString status READ status NOTIFY changed)
     Q_PROPERTY(QString releaseNotes READ releaseNotes NOTIFY changed)
     Q_PROPERTY(bool canInstall READ canInstall CONSTANT)
+    Q_PROPERTY(bool releaseBuild READ releaseBuild CONSTANT)
 
 public:
     explicit Updater(const QString &currentVersion, QObject *parent = nullptr);
@@ -35,7 +41,10 @@ public:
     // False when running from a source checkout (update with git and bin/install).
     bool canInstall() const;
 
-    // Checks shortly after start, then twice a day.
+    // Built by CI for a release, rather than from a source checkout.
+    static bool releaseBuild();
+
+    // Checks shortly after start, then every hour.
     void startAutomaticChecks();
     void stopAutomaticChecks() { m_timer.stop(); }
     Q_INVOKABLE void check();

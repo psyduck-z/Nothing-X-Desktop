@@ -92,10 +92,13 @@ popup.
 
 ## Updates
 
-- **This app:** every tagged release builds the Windows installer and the
-  Arch package from the same commit, so both platforms run the same version.
-  The app checks twice a day and installs with one click: quietly on Windows,
-  and through the system password prompt on Omarchy.
+- **This app:** every push to `main` publishes a release with the Windows
+  installer and the Arch package, built from the same commit, so both
+  platforms run the same version. On Windows it installs itself: it checks
+  every hour and, while the popup is closed, runs the new installer quietly
+  and comes back in the tray. On Omarchy it says a new version is out and
+  installs with one click, through the system password prompt. A build from
+  a source checkout leaves this to `git pull` and `bin/install`.
 - **The official app:** put a newer Nothing X `.xapk` or `.apk` in Downloads
   (or the Desktop, Documents, or home folder). It is imported on its own,
   bringing new devices, options and artwork. You can also choose it under App
@@ -160,9 +163,10 @@ build/nothingx --demo                    # try the UI without earbuds
 build/nothingx --screenshots /tmp/shots  # render every page to PNG
 ```
 
-Versions follow the official app: `3.10.3.1` is the first desktop build of
-Nothing X 3.10.3. Release by bumping `VERSION` in `nothingx.pro` and pushing
-a tag `v<version>`; CI publishes both platforms.
+Versions follow the official app: `3.10.3.17` is desktop build 17 of
+Nothing X 3.10.3. `VERSION` in `nothingx.pro` holds the official version;
+CI replaces its last part with the run number and publishes both platforms
+as release `v<version>` on every push to `main` (`packaging/publish.sh`).
 
 ## Credits
 

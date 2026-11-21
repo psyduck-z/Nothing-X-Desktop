@@ -1,12 +1,13 @@
 # Builds the same sources for Omarchy (Arch) and Windows on every push, so the
-# two versions can't drift apart. Pushing a tag like v0.2.0 also publishes a
-# GitHub release with both builds; the app's updater installs from there.
+# two versions can't drift apart. Every push to main also publishes both
+# builds as a GitHub release, numbered after the official Nothing X version
+# this follows: 3.10.3.<run>. Installed copies update themselves from there
+# (src/updater.*): on Windows silently, on Omarchy after a password prompt.
 name: build
 
 on:
   push:
     branches: ["**"]
-    tags: ["v*"]
   pull_request:
 
 permissions:
@@ -20,16 +21,32 @@ jobs:
       - name: Install Qt
         run: |
           pacman -Syu --noconfirm --needed base-devel git sudo qt6-base qt6-declarative qt6-svg \
-            qt6-connectivity qt6-wayland layer-shell-qt bluez-libs
+            qt6-connectivity qt6-wayland layer-shell-qt bluez-libs github-cli
       - uses: actions/checkout@v4
       - name: Test
         run: bin/test
+      - name: Number this build
+        shell: bash
+        run: |
+          base=$(sed -n 's/^VERSION = \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' nothingx.pro)
+          sed -i "s/^VERSION = .*/VERSION = $base.${{ github.run_number }}/" nothingx.pro
+          printf '\n# Built by CI for a release: it updates itself.\nDEFINES += NOTHINGX_RELEASE_BUILD\n' >> nothingx.pro
       - name: Package
         run: |
           useradd -m builder
           chown -R builder .
           sudo -u builder sh -c 'cd packaging/arch && makepkg -f --nodeps'
+      - name: Publish to the release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ github.event.head_commit.message }}
+        run: packaging/publish.sh packaging/arch/*.pkg.tar.zst
+      # Kept with the run too, for branches; a full artifact quota mustn't
+      # stop the release, which doesn't count against it.
       - uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: nothingx-arch
           path: packaging/arch/*.pkg.tar.zst
@@ -44,24 +61,24 @@ jobs:
           version: "6.8.3"
           arch: win64_msvc2022_64
           modules: qtconnectivity
+      - name: Number this build
+        shell: bash
+        run: |
+          base=$(sed -n 's/^VERSION = \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' nothingx.pro)
+          sed -i "s/^VERSION = .*/VERSION = $base.${{ github.run_number }}/" nothingx.pro
+          printf '\n# Built by CI for a release: it updates itself.\nDEFINES += NOTHINGX_RELEASE_BUILD\n' >> nothingx.pro
       - name: Build
         shell: pwsh
         run: .\packaging\windows\build.ps1 -QtDir "$env:QT_ROOT_DIR"
+      - name: Publish to the release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NOTES: ${{ github.event.head_commit.message }}
+        run: packaging/publish.sh dist/windows/NothingX-Setup-*.exe
       - uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
           name: nothingx-windows
           path: dist/windows/NothingX-Setup-*.exe
-
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
-    needs: [linux, windows]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: dist
-          merge-multiple: true
-      - uses: softprops/action-gh-release@v2
-        with:
-          files: dist/*
-          generate_release_notes: true

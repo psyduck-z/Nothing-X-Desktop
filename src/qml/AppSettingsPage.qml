@@ -118,7 +118,9 @@ ScrollPage {
         }
         ListRow {
             title: qsTr("Update automatically")
-            subtitle: qsTr("Check for new versions twice a day")
+            subtitle: !updater.releaseBuild ? qsTr("A build from source: update with git pull and bin/install")
+                : Qt.platform.os === "windows" ? qsTr("New versions install themselves while this window is closed")
+                : qsTr("Check for new versions every hour")
             hasSwitch: true
             checked: settings.autoUpdate
             onToggled: (v) => settings.autoUpdate = v

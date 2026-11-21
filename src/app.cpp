@@ -125,12 +125,40 @@ bool App::start() {
     });
 
     // Updates of this app: both platforms install the same GitHub release.
-    connect(m_updater.get(), &Updater::updateFound, this, [this](const QString &v) {
+    // On Windows it installs by itself, like Wumpy: the installer runs
+    // silently and starts the new version hidden in the tray. Never while the
+    // window is open - it waits for it to close. On Omarchy installing needs
+    // a password, so it says so once per version instead.
+    connect(m_updater.get(), &Updater::updateFound, this, [this, window](const QString &v) {
+#ifdef Q_OS_WIN
+        if (m_settings->autoUpdate() && m_updater->canInstall()) {
+            if (!window->isVisible()) {
+                m_updater->install();
+            } else if (!m_updateWaiting) {
+                m_updateWaiting = true;
+                connect(
+                    window, &QWindow::visibleChanged, this,
+                    [this](bool visible) {
+                        if (visible)
+                            return;
+                        m_updateWaiting = false;
+                        m_updater->install();
+                    },
+                    Qt::SingleShotConnection);
+            }
+            return;
+        }
+#else
+        Q_UNUSED(window);
+#endif
+        if (v == m_announcedUpdate)
+            return;
+        m_announcedUpdate = v;
         m_tray->notify(tr("Nothing X %1 is available").arg(v), tr("Open Nothing X › App settings to update."));
     });
     connect(m_updater.get(), &Updater::restartRequested, this, &App::quit);
     auto followAutoUpdate = [this, realRun] {
-        if (realRun && m_settings->autoUpdate())
+        if (realRun && m_settings->autoUpdate() && Updater::releaseBuild())
             m_updater->startAutomaticChecks();
         else
             m_updater->stopAutomaticChecks();

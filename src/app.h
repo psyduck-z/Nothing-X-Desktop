@@ -74,6 +74,10 @@ private:
     std::unique_ptr<TrayIcon> m_tray;
     std::unique_ptr<QQmlApplicationEngine> m_engine;
     std::unique_ptr<PopupPlacer> m_placer;
+    // The update last announced, so an hourly check doesn't repeat it.
+    QString m_announcedUpdate;
+    // An update is waiting for the window to close before it installs.
+    bool m_updateWaiting = false;
     QLocalServer m_server;
     QTimer m_officialWatch;
 };
